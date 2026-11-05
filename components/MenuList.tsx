@@ -1,5 +1,4 @@
 import type { MenuItem } from "@/lib/site";
-import { Copy } from "./Rich";
 
 export function MenuList({ items }: { items: MenuItem[] }) {
   return (
@@ -10,9 +9,11 @@ export function MenuList({ items }: { items: MenuItem[] }) {
             <p className="font-semibold">{item.name}</p>
             {item.desc && <p className="mt-1 text-[0.95rem] text-muted">{item.desc}</p>}
           </div>
-          <p className="whitespace-nowrap font-semibold tabular-nums">
-            <Copy text={item.price} />
-          </p>
+          {item.price && (
+            <p className={`whitespace-nowrap font-semibold tabular-nums ${item.price.startsWith("Ask") ? "text-[0.95rem] font-normal text-muted" : ""}`}>
+              {item.price}
+            </p>
+          )}
         </li>
       ))}
     </ul>

@@ -1,5 +1,4 @@
-import { dietary, faqs } from "@/lib/site";
-import { Copy } from "./Rich";
+import { faqs } from "@/lib/site";
 
 export function Faq() {
   return (
@@ -17,14 +16,10 @@ export function Faq() {
                 <span>{f.q}</span>
                 <span aria-hidden="true" className="text-2xl font-normal text-brand transition-transform duration-200 group-open:rotate-45">+</span>
               </summary>
-              <p className="mt-3"><Copy text={f.a} /></p>
+              <p className="mt-3">{f.a}</p>
             </details>
           ))}
         </div>
-        <h3 className="mt-16">Dietary needs</h3>
-        <p className="mt-4"><Copy text={dietary.vegetarian} /></p>
-        <p className="mt-3"><Copy text={`Gluten-free: ${dietary.glutenFree}`} /></p>
-        <p className="mt-3">{dietary.note}</p>
       </div>
     </section>
   );

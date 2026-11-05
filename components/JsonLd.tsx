@@ -1,6 +1,6 @@
 import { hours, site } from "@/lib/site";
 
-const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const hhmm = (h: number) => `${String(Math.floor(h)).padStart(2, "0")}:${String(Math.round((h % 1) * 60)).padStart(2, "0")}`;
 
 export function JsonLd() {
   const data = {
@@ -22,9 +22,13 @@ export function JsonLd() {
       postalCode: site.address.postalCode,
       addressCountry: site.address.country,
     },
-    openingHoursSpecification: [
-      { "@type": "OpeningHoursSpecification", dayOfWeek: days, opens: "09:00", closes: "17:00" },
-    ],
+    geo: { "@type": "GeoCoordinates", latitude: site.geo.latitude, longitude: site.geo.longitude },
+    openingHoursSpecification: hours.schedule.map((d) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: d.day,
+      opens: hhmm(d.open),
+      closes: hhmm(d.close),
+    })),
     areaServed: site.serviceArea.map((name) => ({ "@type": "City", name })),
     aggregateRating: {
       "@type": "AggregateRating",

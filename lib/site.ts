@@ -1,7 +1,15 @@
 // All business content lives here. Edit this file, not the components.
-// Anything marked [[NEED: ...]] is missing from the brief and must be filled before going live.
+// Open go-live questions are listed in NEEDS.md at the repo root. Nothing on the site shows a placeholder.
 
-export const NEED = (what: string) => `[[NEED: ${what}]]`;
+export const ASK = "Ask at the counter";
+
+const fmtHour = (h: number) => {
+  const hh = Math.floor(h);
+  const mm = Math.round((h - hh) * 60);
+  const ap = hh < 12 ? "a.m." : "p.m.";
+  const h12 = hh % 12 || 12;
+  return mm ? `${h12}:${String(mm).padStart(2, "0")} ${ap}` : `${h12} ${ap}`;
+};
 
 export const site = {
   name: "Campbell's British Tearoom",
@@ -22,8 +30,12 @@ export const site = {
     country: "CA",
     plaza: "Barriegate Centre",
   },
-  mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Campbell%27s+British+Tearoom+Unit+18+274+Burton+Ave+Barrie+ON+L4N+5W4",
+  geo: { latitude: 44.3706832, longitude: -79.6733587 },
+  mapsUrl: "https://www.google.com/maps/dir/?api=1&destination=44.3706832,-79.6733587",
+  visitLine: "In the Barriegate Centre plaza on Burton Ave.",
+  accessibility: "Wheelchair accessible.",
+  orderUrl: "https://order.online/store/campbells-british-tearoom-barrie-28371302/",
+  doordashUrl: "https://www.doordash.com/store/campbells-british-tearoom-barrie-28371302/",
   owners: "Kat and Scott Sharp",
   serviceArea: ["Barrie", "Innisfil"],
   serviceAreaNote:
@@ -32,39 +44,54 @@ export const site = {
     instagram: "https://www.instagram.com/info.campbellsbritishtearoom/",
     facebook: "https://www.facebook.com/Campbellsbritishtearoom/",
   },
-  doordashUrl: NEED("exact DoorDash store link"),
   reviews: {
     rating: 4.5,
     count: 328,
     asOf: "November 2026",
     source: "Google",
-    note: "A local favourite in Barrie for two decades, according to the owners.",
   },
-  // Booking is by request. Afternoon tea needs 24 hours' notice.
   booking: {
     afternoonTeaNoticeHours: 24,
     partyMax: 12,
-    times: [
-      "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
-
-
-
-    ],
-    lastTimeNote: NEED("last seating time for afternoon tea"),
+    partyOver: "13+",
   },
 };
 
+// Hours from the public listings, Nov 2026. Index 0 is Sunday, so the week runs Sunday to Saturday.
+export const schedule = [
+  { day: "Monday", dow: 1, open: 9, close: 17 },
+  { day: "Tuesday", dow: 2, open: 9, close: 17 },
+  { day: "Wednesday", dow: 3, open: 9, close: 17 },
+  { day: "Thursday", dow: 4, open: 9, close: 17 },
+  { day: "Friday", dow: 5, open: 9, close: 18.5 },
+  { day: "Saturday", dow: 6, open: 9, close: 17 },
+  { day: "Sunday", dow: 0, open: 9, close: 16 },
+];
+
 export const hours = {
-  summary: "Open 7 days a week, 9 a.m. to 5 p.m.",
-  rows: [
-    { days: "Monday to Sunday", open: "9 a.m.", close: "5 p.m." },
-  ],
-  daysNote: NEED("confirm hours for each day"),
+  summary: "Open 7 days from 9 a.m.",
+  schedule: schedule.map((d) => ({ ...d, label: `${fmtHour(d.open)} to ${fmtHour(d.close)}` })),
+  holidayNote: "Hours can change on holidays, give us a call.",
   breakfastUntil: "Breakfast is served until noon.",
   fishFridays: "Fish Fridays, every Friday.",
   dineIn: "The tearoom is dine-in. The bakery counter and the shop are for take-home.",
   weekendNote: "Book ahead for weekends and holidays.",
 };
+
+// Start times for a given weekday and booking type. Regular menu closes 30 minutes before close.
+// High Tea's last start is 2 hours before close.
+export function bookingTimes(dow: number, what: string): string[] {
+  const d = schedule.find((s) => s.dow === dow);
+  if (!d) return [];
+  const last = what === "afternoon-tea" ? d.close - 2 : d.close - 0.5;
+  const out: string[] = [];
+  for (let t = d.open; t <= last + 1e-9; t += 0.5) {
+    const h = Math.floor(t);
+    const m = Math.round((t - h) * 60);
+    out.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+  }
+  return out;
+}
 
 export const nav = [
   { href: "/#afternoon-tea", label: "Afternoon tea" },
@@ -78,8 +105,7 @@ export const nav = [
 export type MenuItem = {
   name: string;
   desc?: string;
-  price: string; // "$14.45" or NEED(...)
-  note?: string;
+  price?: string; // omitted when there is no price column for the item
 };
 
 export type MenuSection = {
@@ -93,14 +119,14 @@ export const menu: MenuSection[] = [
   {
     id: "breakfast",
     title: "Breakfast",
-    intro: "Served until noon. A proper breakfast with fried bread, potato scone and black pudding. Swap the link sausage for Lorne (square) sausage at no extra fuss.",
+    intro: "Served until noon. A proper breakfast with fried bread, potato scone and black pudding. Swap the link sausage for Lorne (square) sausage.",
     items: [
-      { name: "Full English", desc: "Fried bread, potato scone, black pudding, Lorne sausage swap available.", price: NEED("breakfast price") },
-      { name: "Vegetarian breakfast", desc: "The full breakfast with the vegetarian sides.", price: NEED("vegetarian breakfast price") },
-      { name: "Side: fried bread", price: NEED("price") },
-      { name: "Side: potato scone", price: NEED("price") },
-      { name: "Side: black pudding", price: NEED("price") },
-      { name: "Side: Lorne (square) sausage", price: NEED("price") },
+      { name: "Full English", desc: "Fried bread, potato scone, black pudding, Lorne sausage swap available.", price: ASK },
+      { name: "Vegetarian breakfast", desc: "The full breakfast with the vegetarian sides.", price: ASK },
+      { name: "Side: fried bread", price: ASK },
+      { name: "Side: potato scone", price: ASK },
+      { name: "Side: black pudding", price: ASK },
+      { name: "Side: Lorne (square) sausage", price: ASK },
     ],
   },
   {
@@ -126,53 +152,45 @@ export const menu: MenuSection[] = [
     title: "Afternoon tea",
     intro: "Book at least 24 hours ahead. Each guest picks a loose-leaf tea and gets their own pot, served in china. Real clotted cream.",
     items: [
-      { name: "Afternoon tea (three tiers)", desc: "Sandwiches, scones with clotted cream and jam, and sweets. Three fingers each of egg mayo, cream cheese and cucumber, and coronation chicken per guest.", price: NEED("afternoon tea price per guest") },
-      { name: "Cream Tea", desc: "A scone, jam, clotted cream and a pot of tea.", price: NEED("cream tea price") },
-      { name: "Royal High Tea", desc: "Guests say it is worth every penny.", price: NEED("Royal High Tea price") },
-      { name: "High Tea Dinner Platter for Two", desc: "A platter to share, built for two.", price: NEED("High Tea Dinner Platter price") },
+      { name: "High Tea", desc: "Three tiers: sandwiches, scones with clotted cream and jam, and sweets. About 2 hours. Book at least 24 hours ahead.", price: "$39.50" },
+      { name: "Cream Tea", desc: "A scone, jam, clotted cream and a pot of tea.", price: ASK },
+      { name: "Royal High Tea", desc: "Guests say it is worth every penny.", price: ASK },
+      { name: "High Tea Dinner Platter for Two", desc: "A platter to share, built for two.", price: ASK },
     ],
   },
   {
     id: "fish-friday",
     title: "Fish Friday",
-    intro: "Fish Fridays, every Friday. Beer batter and chunky fries cut fresh.",
+    intro: "Fish Fridays, every Friday. Beer batter and chunky fries cut fresh in house.",
     items: [
       { name: "Cod and Chips", desc: "Beer batter, chunky fries cut fresh in house.", price: "$20.95" },
-      { name: "Fish Friday specials", desc: NEED("Fish Friday menu beyond cod and chips"), price: NEED("price") },
     ],
   },
   {
     id: "bakery",
     title: "Bakery",
-    intro: "Eat in or take home from the bakery counter. Everything made in house.",
+    intro: "Eat in or take home from the bakery counter. Everything made in house. Baked goods from $2.",
     items: [
-      { name: "Scones", desc: "Plain, plus seasonal flavours such as pumpkin spice and cranberry orange.", price: NEED("scone price") },
-      { name: "Sausage rolls", price: NEED("price") },
-      { name: "Pasties", price: NEED("price") },
-      { name: "Meat pies", desc: "Steak and onion, steak and kidney, chicken and leek, curry chicken, mince and onion, Melton Mowbray pork pie.", price: NEED("pie prices") },
-      { name: "Empire cookies", price: NEED("price") },
-      { name: "Millionaire shortbread", price: NEED("price") },
-      { name: "Eclairs", price: NEED("price") },
-      { name: "Turkey cranberry stuffing bakes", price: NEED("price") },
-      { name: "Breakfast bakes", price: NEED("price") },
-      { name: "Apple crumble", price: NEED("price") },
+      { name: "Scones", desc: "Plain, plus seasonal flavours such as pumpkin spice and cranberry orange." },
+      { name: "Sausage rolls" },
+      { name: "Pasties" },
+      { name: "Meat pies", desc: "Steak and onion, steak and kidney, chicken and leek, curry chicken, mince and onion, Melton Mowbray pork pie." },
+      { name: "Empire cookies" },
+      { name: "Millionaire shortbread" },
+      { name: "Eclairs" },
+      { name: "Turkey cranberry stuffing bakes" },
+      { name: "Breakfast bakes" },
+      { name: "Apple crumble" },
     ],
   },
 ];
 
 export const seasonal = {
   label: "This season",
-  updated: NEED("date these specials were last confirmed"),
-  intro: "Seasonal specials change often. This panel is the one place to update them.",
-  items: [
-    { name: "Pumpkin spice scones", note: "Bakery counter" },
-    { name: "Cranberry orange scones", note: "Bakery counter" },
-    { name: "Turkey cranberry stuffing bakes", note: "Bakery counter" },
-  ],
+  text: "Autumn at Campbell's: pumpkin spice scones, pumpkin pie and apple crumble while they last.",
 };
 
 export const shop = {
-  title: "Shop",
   intro: "Imported British groceries under the same roof as the bakery. Some local Canadian products too.",
   items: ["Tayto crisps", "British sweets", "Frozen sausages", "Gifts", "Some local Canadian products"],
 };
@@ -199,36 +217,30 @@ export const occasions = [
   "Family dinners and small private parties",
 ];
 
-export const dietary = {
-  vegetarian: "There is a vegetarian breakfast on the menu.",
-  glutenFree: NEED("gluten-free options"),
-  note: "Tell us about allergies and dietary needs when you book, so the kitchen knows before you arrive.",
-};
-
 export const faqs: { q: string; a: string }[] = [
   {
     q: "Do I need a booking?",
-    a: "Book ahead for weekends and holidays. They fill up. Afternoon tea needs 24 hours' notice, so use the booking form or call us.",
+    a: "Book ahead for weekends and holidays. High Tea needs 24 hours' notice. Use the booking form or call us.",
   },
   {
-    q: "Is there a vegetarian breakfast?",
-    a: "Yes. There is a vegetarian breakfast on the menu.",
+    q: "Gluten-free?",
+    a: "Yes, just tell us when you book so we can have it ready.",
   },
   {
-    q: "Do you have gluten-free options?",
-    a: NEED("gluten-free options"),
+    q: "Vegetarian?",
+    a: "Yes, including a vegetarian breakfast.",
   },
   {
     q: "Can I order takeout?",
-    a: `The bakery counter and the shop are for take-home. You can also order on DoorDash: ${NEED("exact DoorDash store link")}.`,
+    a: "Yes. Order pickup online, or delivery on DoorDash. The bakery counter and the shop are for take-home.",
+  },
+  {
+    q: "Is it wheelchair accessible?",
+    a: "Yes. Wheelchair accessible.",
   },
   {
     q: "Where are you?",
-    a: "Unit 18, 274 Burton Ave, inside the Barriegate Centre plaza in Barrie. We serve Barrie and Innisfil, and plenty of guests drive in from further away.",
-  },
-  {
-    q: "Is there parking?",
-    a: NEED("parking details"),
+    a: "Unit 18, 274 Burton Ave, in the Barriegate Centre plaza on Burton Ave, Barrie. We serve Barrie and Innisfil, and plenty of guests drive in from further away.",
   },
 ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { site, concept } from "@/lib/site";
+import { bookingTimes, site, concept } from "@/lib/site";
 
 type Values = {
   date: string;
@@ -17,9 +17,14 @@ type Values = {
 type Key = keyof Values;
 
 const whatOptions = [
-  { value: "afternoon-tea", label: "Afternoon tea" },
+  { value: "afternoon-tea", label: "High Tea" },
   { value: "regular", label: "Regular menu" },
   { value: "celebration", label: "Celebration" },
+];
+
+const partyOptions = [
+  ...Array.from({ length: site.booking.partyMax }, (_, i) => String(i + 1)),
+  site.booking.partyOver,
 ];
 
 const empty: Values = { date: "", time: "", party: "2", what: "afternoon-tea", name: "", phone: "", email: "", dietary: "", notes: "" };
@@ -35,6 +40,10 @@ function localISO(d: Date) {
   return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
 }
 
+function dayOf(date: string) {
+  return new Date(`${date}T12:00:00`).getDay();
+}
+
 function fmt(d: Date) {
   return d.toLocaleString("en-CA", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
@@ -42,17 +51,18 @@ function fmt(d: Date) {
 function validate(v: Values): Partial<Record<Key, string>> {
   const e: Partial<Record<Key, string>> = {};
   const notice = site.booking.afternoonTeaNoticeHours;
-  const max = site.booking.partyMax;
   if (!v.date) e.date = "Pick a date.";
   else if (v.date < localISO(new Date())) e.date = "Pick today or a later date.";
   if (!v.time) e.time = "Pick a time.";
+  else if (v.date && !bookingTimes(dayOf(v.date), v.what).includes(v.time)) e.time = "Pick a time from the list for that day.";
   const n = Number(v.party);
-  if (!v.party || !Number.isInteger(n) || n < 1 || n > max) e.party = `Party size is 1 to ${max}. For a bigger group, call us.`;
+  const okParty = v.party === site.booking.partyOver || (Number.isInteger(n) && n >= 1 && n <= site.booking.partyMax);
+  if (!okParty) e.party = `Pick a party size from 1 to ${site.booking.partyMax}, or ${site.booking.partyOver} and we'll call you.`;
   if (!v.what) e.what = "Choose what this booking is for.";
-  if (v.what === "afternoon-tea" && v.date && v.time) {
+  if (v.what === "afternoon-tea" && v.date && v.time && !e.time) {
     const when = new Date(`${v.date}T${v.time}:00`);
     const earliest = new Date(Date.now() + notice * 3600_000);
-    if (when < earliest) e.time = `Afternoon tea needs ${notice} hours' notice. The earliest time we can book is ${fmt(earliest)}.`;
+    if (when < earliest) e.time = `High Tea needs ${notice} hours' notice. The earliest time we can book is ${fmt(earliest)}.`;
   }
   if (!v.name.trim()) e.name = "Add the name for the booking.";
   if (v.phone.replace(/\D/g, "").length < 10) e.phone = "Add a phone number we can call.";
@@ -73,6 +83,7 @@ export function BookForm() {
   }, []);
 
   const set = (k: Key) => (e: { target: { value: string } }) => setV((prev) => ({ ...prev, [k]: e.target.value }));
+  const times = v.date ? bookingTimes(dayOf(v.date), v.what) : [];
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -88,12 +99,13 @@ export function BookForm() {
 
   if (sent) {
     const label = whatOptions.find((o) => o.value === sent.what)?.label ?? sent.what;
+    const partyText = sent.party === site.booking.partyOver ? "13 or more (we'll call you)" : sent.party;
     return (
       <div role="status" className="border-t border-line pt-8">
         <p className="eyebrow">Request received</p>
         <h2 className="mt-4 text-[clamp(2.25rem,1.6rem+2.6vw,3.5rem)]">Thanks, {sent.name.trim()}.</h2>
         <p className="mt-6 text-lg">
-          We have your request for {sent.date} at {timeLabel(sent.time)}, party of {sent.party}, for {label.toLowerCase()}. We will confirm by phone or email.
+          We have your request for {sent.date} at {timeLabel(sent.time)}, party of {partyText}, for {label.toLowerCase()}. We will confirm by phone or email.
         </p>
         <p className="mt-6 text-sm text-muted">{concept.notConnected} Nothing was sent or stored.</p>
         <div className="mt-10 flex flex-wrap gap-6">
@@ -107,7 +119,7 @@ export function BookForm() {
   const err = (k: Key) =>
     errors[k] ? <p id={`e-${k}`} className="mt-2 text-sm font-bold text-brand">{errors[k]}</p> : null;
   const invalid = (k: Key) => (errors[k] ? "true" : undefined);
-  const describe = (k: Key, extra?: string) => [extra ? `h-${k}` : null, errors[k] ? `e-${k}` : null].filter(Boolean).join(" ") || undefined;
+  const describe = (k: Key) => (errors[k] ? `e-${k}` : undefined);
 
   return (
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-7" aria-label="Booking request">
@@ -118,22 +130,6 @@ export function BookForm() {
           {err("date")}
         </div>
         <div>
-          <label htmlFor="f-time" className="mb-2 block font-bold">Time</label>
-          <select id="f-time" value={v.time} onChange={set("time")} aria-invalid={invalid("time")} aria-describedby={describe("time", "h")} className="field">
-            <option value="">Choose a time</option>
-            {site.booking.times.map((t) => (
-              <option key={t} value={t}>{timeLabel(t)}</option>
-            ))}
-          </select>
-          <p id="h-time" className="mt-2 text-sm text-muted">Afternoon tea needs 24 hours&apos; notice.</p>
-          {err("time")}
-        </div>
-        <div>
-          <label htmlFor="f-party" className="mb-2 block font-bold">Party size</label>
-          <input id="f-party" type="number" inputMode="numeric" min={1} max={site.booking.partyMax} value={v.party} onChange={set("party")} aria-invalid={invalid("party")} aria-describedby={describe("party")} className="field" />
-          {err("party")}
-        </div>
-        <div>
           <label htmlFor="f-what" className="mb-2 block font-bold">What is it for</label>
           <select id="f-what" value={v.what} onChange={set("what")} aria-invalid={invalid("what")} aria-describedby={describe("what")} className="field">
             {whatOptions.map((o) => (
@@ -141,6 +137,30 @@ export function BookForm() {
             ))}
           </select>
           {err("what")}
+        </div>
+        <div>
+          <label htmlFor="f-time" className="mb-2 block font-bold">Time</label>
+          <select id="f-time" value={v.time} onChange={set("time")} disabled={!v.date} aria-invalid={invalid("time")} aria-describedby={describe("time") ?? "h-time"} className="field">
+            <option value="">{v.date ? "Choose a time" : "Pick a date first"}</option>
+            {times.map((t) => (
+              <option key={t} value={t}>{timeLabel(t)}</option>
+            ))}
+          </select>
+          <p id="h-time" className="mt-2 text-sm text-muted">
+            {v.what === "afternoon-tea"
+              ? "High Tea needs 24 hours' notice. The last start is 2 hours before close."
+              : "The last start is 30 minutes before close."}
+          </p>
+          {err("time")}
+        </div>
+        <div>
+          <label htmlFor="f-party" className="mb-2 block font-bold">Party size</label>
+          <select id="f-party" value={v.party} onChange={set("party")} aria-invalid={invalid("party")} aria-describedby={describe("party")} className="field">
+            {partyOptions.map((p) => (
+              <option key={p} value={p}>{p === site.booking.partyOver ? "13 or more (we'll call you)" : p}</option>
+            ))}
+          </select>
+          {err("party")}
         </div>
       </div>
 

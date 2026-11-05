@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { concept, nav, site } from "@/lib/site";
-import { Copy } from "./Rich";
 
 function UnionJackMark() {
   return (
@@ -21,7 +20,7 @@ export function Footer() {
         <div className="md:col-span-5">
           <p className="font-display text-3xl leading-tight">Campbell&apos;s British Tearoom</p>
           <p className="mt-4 text-muted">{site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode}</p>
-          <p className="mt-1 text-muted">Inside the {site.address.plaza}</p>
+          <p className="mt-1 text-muted">{site.visitLine}</p>
           <p className="mt-1 font-semibold"><a href={`tel:${site.phoneTel}`} className="draw">{site.phone}</a></p>
         </div>
         <nav aria-label="Footer" className="md:col-span-3">
@@ -34,14 +33,13 @@ export function Footer() {
           </ul>
         </nav>
         <div className="md:col-span-4">
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Follow along</p>
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Order and follow</p>
           <ul className="mt-3 flex flex-col">
+            <li><a href={site.orderUrl} className="draw draw-hover" rel="noopener">Order pickup online</a></li>
+            <li><a href={site.doordashUrl} className="draw draw-hover" rel="noopener">Delivery on DoorDash</a></li>
             <li><a href={site.socials.instagram} className="draw draw-hover" rel="noopener">Instagram</a></li>
             <li><a href={site.socials.facebook} className="draw draw-hover" rel="noopener">Facebook</a></li>
           </ul>
-          <p className="mt-6 text-sm text-muted">
-            Takeout on DoorDash: <Copy text={site.doordashUrl} />
-          </p>
         </div>
       </div>
       <div className="border-t border-line">

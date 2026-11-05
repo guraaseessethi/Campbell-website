@@ -1,5 +1,4 @@
 import { hours, site } from "@/lib/site";
-import { Copy } from "./Rich";
 
 export function Visit() {
   return (
@@ -7,9 +6,7 @@ export function Visit() {
       <div className="mx-auto max-w-[1280px] px-4 py-24 md:px-8 md:py-36">
         <p className="eyebrow">Visit</p>
         <h2 data-reveal className="mt-4 text-[clamp(2.75rem,1.4rem+6vw,6.5rem)]">Unit 18, 274 Burton Ave.</h2>
-        <p className="mt-6 text-lg">
-          Inside the {site.address.plaza} in {site.address.locality}. {hours.summary}
-        </p>
+        <p className="mt-6 text-lg">{site.visitLine} {hours.summary}</p>
         <div className="mt-14 grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="flex flex-col gap-4 md:col-span-6">
             <a href={`tel:${site.phoneTel}`} className="btn btn-outline min-h-16 justify-between text-xl">
@@ -24,12 +21,19 @@ export function Visit() {
           </div>
           <dl className="border-t border-line md:col-span-5 md:col-start-8">
             <div className="grid gap-1 border-b border-line py-4">
-              <dt className="text-sm font-extrabold uppercase tracking-[0.12em] text-muted">Service area</dt>
-              <dd>Barrie and Innisfil. {site.serviceAreaNote}</dd>
+              <dt className="text-sm font-extrabold uppercase tracking-[0.12em] text-muted">Accessibility</dt>
+              <dd>{site.accessibility}</dd>
             </div>
             <div className="grid gap-1 border-b border-line py-4">
               <dt className="text-sm font-extrabold uppercase tracking-[0.12em] text-muted">Takeout</dt>
-              <dd><Copy text={`DoorDash: ${site.doordashUrl}`} /></dd>
+              <dd className="flex flex-col gap-1">
+                <a href={site.orderUrl} className="draw font-semibold" rel="noopener">Order pickup online</a>
+                <a href={site.doordashUrl} className="draw font-semibold" rel="noopener">Delivery on DoorDash</a>
+              </dd>
+            </div>
+            <div className="grid gap-1 border-b border-line py-4">
+              <dt className="text-sm font-extrabold uppercase tracking-[0.12em] text-muted">Service area</dt>
+              <dd>Barrie and Innisfil. {site.serviceAreaNote}</dd>
             </div>
             <div className="grid gap-1 border-b border-line py-4">
               <dt className="text-sm font-extrabold uppercase tracking-[0.12em] text-muted">Social</dt>

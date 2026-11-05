@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { photos } from "@/lib/images";
 import { menu, shop, site } from "@/lib/site";
-import { Copy } from "./Rich";
 import { MenuList } from "./MenuList";
 import { Seasonal } from "./Seasonal";
 
@@ -16,8 +15,10 @@ export function Bakery() {
         <div className="-mt-20 bg-paper p-6 md:-mt-32 md:ml-[8%] md:max-w-[46rem] md:p-12">
           <p className="eyebrow">Bakery counter and shop</p>
           <h2 data-reveal className="mt-4">Pies, scones and sausage rolls to take home.</h2>
-          <p className="mt-6 text-lg">
-            Eat in or take home. Everything is made in house. Pick up a pie on the way home, or order takeout on DoorDash: <Copy text={site.doordashUrl} />
+          <p className="mt-6 text-lg">Eat in or take home. Baked goods from $2.</p>
+          <p className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+            <a href={site.orderUrl} className="draw font-bold" rel="noopener">Order pickup online</a>
+            <a href={site.doordashUrl} className="draw font-bold" rel="noopener">Delivery on DoorDash</a>
           </p>
         </div>
       </div>

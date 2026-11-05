@@ -1,14 +1,34 @@
 import { hours, site } from "@/lib/site";
-import { Copy } from "./Rich";
 
 export function HoursBand() {
   const rows = [
-    { term: "Hours", def: <><Copy text={`${hours.rows[0].days}, ${hours.rows[0].open} to ${hours.rows[0].close}.`} /> <Copy text={hours.daysNote} /></> },
+    {
+      term: "Hours",
+      def: (
+        <ul className="grid max-w-sm gap-1">
+          {hours.schedule.map((d) => (
+            <li key={d.day} className="flex justify-between gap-6">
+              <span>{d.day}</span>
+              <span className="tabular-nums">{d.label}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+    { term: "Holidays", def: <>{hours.holidayNote}</> },
     { term: "Breakfast", def: <>{hours.breakfastUntil}</> },
     { term: "Fish Fridays", def: <>{hours.fishFridays}</> },
     { term: "Weekends", def: <strong className="font-bold text-brand">{hours.weekendNote}</strong> },
     { term: "Dine in", def: <>{hours.dineIn}</> },
-    { term: "Find us", def: <>{site.address.street}, {site.address.plaza}, {site.address.locality}, {site.address.region} {site.address.postalCode}. <a href={site.mapsUrl} className="draw font-semibold" rel="noopener">Open in Google Maps</a></> },
+    {
+      term: "Find us",
+      def: (
+        <>
+          {site.address.street}, {site.visitLine} {site.address.locality}, {site.address.region} {site.address.postalCode}.{" "}
+          <a href={site.mapsUrl} className="draw font-semibold" rel="noopener">Get directions</a>
+        </>
+      ),
+    },
   ];
   return (
     <section aria-labelledby="hours-title" className="mx-auto grid max-w-[1280px] gap-12 px-4 pb-24 md:grid-cols-12 md:gap-10 md:px-8 md:pb-36">
