@@ -11,8 +11,9 @@ export function BreakfastLunch() {
     <section id="breakfast-lunch" className="mx-auto grid max-w-[1280px] gap-16 px-4 py-24 md:grid-cols-12 md:gap-10 md:px-8 md:py-36">
       <div className="md:col-span-5 md:sticky md:top-28 md:self-start">
         <div data-wipe className="img-zoom relative aspect-[4/5]">
-          <Image src={photos.fryUp.src} alt={photos.fryUp.alt} fill sizes="(min-width: 768px) 40vw, 92vw" className="object-cover" />
+          <Image src={photos.blueBreakfast.src} alt={photos.blueBreakfast.alt} fill sizes="(min-width: 768px) 40vw, 92vw" className="object-cover" />
         </div>
+        <p className="mt-4 text-sm text-muted">Fried bread, potato scone and black pudding. Swap in Lorne (square) sausage.</p>
       </div>
       <div className="md:col-span-6 md:col-start-7">
         <p className="eyebrow">Breakfast and lunch</p>
@@ -29,7 +30,7 @@ export function BreakfastLunch() {
         <div className="mt-6"><MenuList items={lunch.items} /></div>
 
         <p className="mt-10">
-          <Link href="/menu" className="draw font-bold text-lg">Full menu with prices</Link>
+          <Link href="/menu" className="draw text-lg font-bold">Full menu with prices</Link>
         </p>
       </div>
     </section>

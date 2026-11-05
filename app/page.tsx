@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { AfternoonTea } from "@/components/AfternoonTea";
-import { BreakfastLunch } from "@/components/BreakfastLunch";
 import { Bakery } from "@/components/Bakery";
+import { BreakfastLunch } from "@/components/BreakfastLunch";
 import { Celebrations } from "@/components/Celebrations";
 import { Faq } from "@/components/Faq";
+import { FishFriday } from "@/components/FishFriday";
 import { Hero } from "@/components/Hero";
 import { HoursBand } from "@/components/HoursBand";
 import { Reviews } from "@/components/Reviews";
@@ -22,6 +23,7 @@ export default function Home() {
       <HoursBand />
       <AfternoonTea />
       <BreakfastLunch />
+      <FishFriday />
       <Bakery />
       <Celebrations />
       <Reviews />

@@ -34,9 +34,11 @@
    - No Lenis (the brief is not editorial-premium). No bounce, no spinning, no cursor effects.
    - All animation lives in components/Motion.tsx. gsap.matchMedia for desktop and reduced motion.
 
-7. Section plan
-   - Home: header; hero (split, photo right bleeding off edge, type overlapping); hours and address band (hairline list, "Book ahead for weekends and holidays" beside hours); afternoon tea stand (pinned, tiers); breakfast and lunch (split, photo left, hairline price list); bakery and shop (full-bleed pies photo, type over it, columns); celebrations (offset two columns, list of occasions, button to /book?for=celebration); reviews (hairline quote list, 4.5 from 328); FAQ (dietary, booking, takeout); visit (oversized address, big call and email buttons); footer with concept credit.
-   - /menu: category anchor tabs, hairline price lists, seasonal panel.
-   - /book: split, form on the right, notes on the left.
+7. Section plan (visual pass after review of rendered screenshots)
+   - Header: one line, wordmark, five anchors, phone, Book button. Short "Book" label on phones.
+   - Home: rose split hero (type left, full-height photo right); hours in three columns (address, days, good to know); afternoon tea on paper-deep with the drawn three-tier stand and two big photos; breakfast and lunch (sticky photo plus price lists); Fish Friday on tea-brown with photo; bakery full-bleed photo with an overlapping panel; celebrations on rose; reviews (one large quote, rest in columns); FAQ; visit on tea-brown.
+   - /menu: rose header with category anchors, "This season" panel, hairline price lists. /book: split, form right.
+   - Field rhythm down the page: rose, paper, paper-deep, paper, tea-brown, paper-deep, rose, paper-deep, paper, tea-brown.
+   - On rose and tea-brown fields the primary Book button is cream (btn-light). Navy accent stays on light fields and the mobile bar.
 
 8. Slop check: BANNED list reviewed. No Inter/Roboto/Poppins etc. No purple, no gradients, no gradient text, no glow, no glass, no cards inside cards, no icon grids, no stats bar, no logo row, no centred hero, no three equal cards, no Tailwind default hex. Emoji and em dash absent.

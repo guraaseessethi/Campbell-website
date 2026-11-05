@@ -135,3 +135,17 @@
     padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
   }
 }
+
+@theme {
+  --color-rose-tint: oklch(0.88 0.06 12);
+  --color-tan: oklch(0.84 0.09 75);
+}
+
+@layer components {
+  .btn { white-space: nowrap; }
+  .btn-light { background: var(--color-paper); color: var(--color-ink); border-radius: 999px; }
+  .btn-light:hover { background: var(--color-paper-deep); transform: translateY(-2px); }
+  .btn-outline-light { border: 1.5px solid var(--color-paper); border-radius: 2px; color: var(--color-paper); }
+  .btn-outline-light:hover { background: var(--color-paper); color: var(--color-ink); }
+  .draw { white-space: nowrap; }
+}

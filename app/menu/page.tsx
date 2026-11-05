@@ -11,22 +11,24 @@ export const metadata: Metadata = {
 export default function MenuPage() {
   return (
     <>
-      <section className="mx-auto max-w-[1280px] px-4 pb-12 pt-14 md:px-8 md:pt-24">
-        <p className="eyebrow">Menu</p>
-        <h1 className="mt-4">Menu and prices</h1>
-        <p className="mt-6 text-lg">
-          Breakfast is served until noon. Afternoon tea needs 24 hours&apos; notice. Prices are in Canadian dollars and may change.
-        </p>
-        <nav aria-label="Menu categories" className="mt-12 flex flex-wrap gap-x-8 gap-y-2 border-b border-line">
-          {menu.map((s) => (
-            <a key={s.id} href={`#${s.id}`} className="draw draw-hover text-sm font-extrabold uppercase tracking-[0.12em]">
-              {s.title}
-            </a>
-          ))}
-        </nav>
+      <section className="bg-brand text-paper">
+        <div className="mx-auto max-w-[1280px] px-4 pb-0 pt-14 md:px-8 md:pt-24">
+          <p className="text-[0.8rem] font-extrabold uppercase tracking-[0.14em] text-rose-tint">Menu</p>
+          <h1 className="mt-4">Menu and prices</h1>
+          <p className="mt-6 text-lg">
+            Breakfast is served until noon. Afternoon tea needs 24 hours&apos; notice. Prices are in Canadian dollars and may change.
+          </p>
+          <nav aria-label="Menu categories" className="mt-12 flex flex-wrap gap-x-8 gap-y-1 border-t border-paper/30 pt-2">
+            {menu.map((s) => (
+              <a key={s.id} href={`#${s.id}`} className="draw draw-hover text-sm font-extrabold uppercase tracking-[0.12em]">
+                {s.title}
+              </a>
+            ))}
+          </nav>
+        </div>
       </section>
 
-      <div className="mx-auto grid max-w-[1280px] gap-16 px-4 pb-24 md:grid-cols-12 md:gap-10 md:px-8 md:pb-36">
+      <div className="mx-auto grid max-w-[1280px] gap-16 px-4 py-16 md:grid-cols-12 md:gap-10 md:px-8 md:pb-36">
         <div className="md:col-span-4 md:sticky md:top-28 md:self-start">
           <Seasonal />
         </div>

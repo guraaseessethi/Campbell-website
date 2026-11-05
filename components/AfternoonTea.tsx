@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { photos } from "@/lib/images";
 import { menu } from "@/lib/site";
+import { TeaStand } from "./TeaStand";
 
 export function AfternoonTea() {
   const tea = menu.find((s) => s.id === "afternoon-tea")!;
   return (
     <section id="afternoon-tea" className="bg-paper-deep">
-      <div className="mx-auto grid max-w-[1280px] gap-16 px-4 py-24 md:grid-cols-12 md:gap-10 md:px-8 md:py-36">
+      <div className="mx-auto grid max-w-[1280px] gap-16 px-4 pb-16 pt-24 md:grid-cols-12 md:gap-10 md:px-8 md:pb-24 md:pt-36">
         <div className="md:col-span-5">
           <p className="eyebrow">Afternoon tea</p>
           <h2 data-reveal className="mt-4">Built from the bottom up.</h2>
@@ -15,14 +16,11 @@ export function AfternoonTea() {
             Three tiers, one for each part of the tea. Each guest picks a loose-leaf tea and gets their own pot, served in china. The clotted cream is real.
           </p>
           <p className="mt-4">High Tea is $39.50 and takes about 2 hours. Book at least 24 hours ahead.</p>
-          <div className="img-zoom relative mt-10 aspect-[4/3] max-w-md">
-            <Image src={photos.teapot.src} alt={photos.teapot.alt} fill sizes="(min-width: 768px) 36vw, 90vw" className="object-cover" />
-          </div>
           <ul className="mt-10 border-t border-line">
             {tea.items.map((item) => (
               <li key={item.name} className="flex items-baseline justify-between gap-6 border-b border-line py-4">
                 <span className="font-semibold">{item.name}</span>
-                <span className={`whitespace-nowrap font-semibold tabular-nums ${item.price?.startsWith("Ask") ? "font-normal text-muted" : ""}`}>{item.price}</span>
+                <span className={`whitespace-nowrap tabular-nums ${item.price?.startsWith("Ask") ? "text-[0.95rem] text-muted" : "font-semibold"}`}>{item.price}</span>
               </li>
             ))}
           </ul>
@@ -30,31 +28,16 @@ export function AfternoonTea() {
             <Link href="/book" className="btn btn-accent">Book afternoon tea</Link>
           </div>
         </div>
-
         <div className="md:col-span-6 md:col-start-7">
-          <div id="stand-pin" className="mx-auto flex max-w-[34rem] flex-col gap-3 bg-paper-deep py-6">
-            <div data-tier="top" className="mx-auto w-[62%] border border-line bg-paper p-6">
-              <p className="eyebrow">Top tier</p>
-              <h3 className="mt-2">Sweets</h3>
-              <p className="mt-2 text-[0.95rem] text-muted">Recent sweets have included Eton Mess, mousse and mini cupcakes.</p>
-            </div>
-            <div data-tier="middle" className="mx-auto w-[82%] border border-line bg-paper">
-              <div className="relative aspect-[16/9]">
-                <Image src={photos.scones.src} alt={photos.scones.alt} fill sizes="(min-width: 900px) 30vw, 80vw" className="object-cover" />
-              </div>
-              <div className="p-6">
-                <p className="eyebrow">Middle tier</p>
-                <h3 className="mt-2">Scones, clotted cream and jam</h3>
-              </div>
-            </div>
-            <div data-tier="bottom" className="w-full border border-line bg-paper p-6 md:p-8">
-              <p className="eyebrow">Bottom tier</p>
-              <h3 className="mt-2">Sandwiches</h3>
-              <p className="mt-2 text-[0.95rem] text-muted">
-                Three fingers each of egg mayo, cream cheese and cucumber, and coronation chicken per guest.
-              </p>
-            </div>
-          </div>
+          <TeaStand />
+        </div>
+      </div>
+      <div className="mx-auto grid max-w-[1280px] gap-6 px-4 pb-24 md:grid-cols-12 md:px-8 md:pb-36">
+        <div data-wipe className="img-zoom relative aspect-[4/5] md:col-span-4">
+          <Image src={photos.sconeCream.src} alt={photos.sconeCream.alt} fill sizes="(min-width: 768px) 30vw, 92vw" className="object-cover" />
+        </div>
+        <div className="img-zoom relative aspect-[4/3] md:col-span-8 md:mt-24 md:aspect-[16/10]">
+          <Image src={photos.teaSpread.src} alt={photos.teaSpread.alt} fill sizes="(min-width: 768px) 62vw, 92vw" className="object-cover" />
         </div>
       </div>
     </section>

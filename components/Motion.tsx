@@ -57,7 +57,7 @@ export function Motion() {
             .timeline({
               scrollTrigger: {
                 trigger: "#stand-pin",
-                start: "top 18%",
+                start: "top 14%",
                 end: "+=700",
                 pin: true,
                 scrub: 0.6,

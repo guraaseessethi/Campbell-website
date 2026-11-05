@@ -95,8 +95,8 @@ export function bookingTimes(dow: number, what: string): string[] {
 
 export const nav = [
   { href: "/#afternoon-tea", label: "Afternoon tea" },
-  { href: "/#breakfast-lunch", label: "Breakfast and lunch" },
-  { href: "/#bakery", label: "Bakery and shop" },
+  { href: "/#breakfast-lunch", label: "Breakfast" },
+  { href: "/#bakery", label: "Bakery" },
   { href: "/#celebrations", label: "Celebrations" },
   { href: "/menu", label: "Menu" },
   { href: "/#visit", label: "Visit" },
